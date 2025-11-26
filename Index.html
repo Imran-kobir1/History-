@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MegaPersonals - Login History</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-mega {
+            color: #ff9933;
+            font-size: 36px;
+            font-weight: bold;
+            display: inline;
+        }
+
+        .logo-personals {
+            color: #5cb3e8;
+            font-size: 36px;
+            font-weight: bold;
+            display: inline;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        .page-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .user-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .user-info h3 {
+            color: #0099ff;
+            margin-bottom: 10px;
+        }
+
+        .user-info p {
+            color: #666;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .history-table {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #0099ff;
+            color: white;
+        }
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            font-size: 15px;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .btn-signout {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .btn-signout:hover {
+            background-color: #ff5252;
+        }
+
+        .device-icon {
+            margin-right: 5px;
+        }
+
+        .btn-logout {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-logout:hover {
+            background-color: #ff5252;
+        }
+
+        .warning-box {
+            background-color: #ffd700;
+            border: 5px dashed #000;
+            border-radius: 15px;
+            padding: 18px 25px;
+            margin: 25px auto;
+            text-align: left;
+            max-width: 550px;
+            position: relative;
+        }
+
+        .warning-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .warning-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            margin: 3px 0;
+        }
+
+        .warning-url {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .question-mark {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 60px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #0099ff;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            margin-top: 15px;
+            color: #0099ff;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #0099ff;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-modal-signout {
+            flex: 1;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-modal-signout:hover {
+            background-color: #ff5252;
+        }
+
+        .btn-modal-cancel {
+            flex: 1;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-modal-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 10px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="logo.png" alt="MegaPersonals" style="max-width: 400px; width: 100%;">
+            </div>
+        </div>
+
+        <div class="page-title">Login History</div>
+
+        <div class="history-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="device-icon">📱</span>iPhone</td>
+                        <td>United States</td>
+                        <td>
+                            <span class="status-active">● Active</span>
+                            <button class="btn-signout">Sign Out</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="device-icon">📱</span>Android Phone</td>
+                        <td>United States</td>
+                        <td>
+                            <span class="status-active">● Active</span>
+                            <button class="btn-signout">Sign Out</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="btn-logout" onclick="openLogoutAllModal()">Logout from All Devices</button>
+
+        <div class="warning-box">
+            <div class="warning-title">DON'T GET SCAMMED!</div>
+            <div class="warning-text">Is the address up top:</div>
+            <div class="warning-url">megapersonals.eu</div>
+            <div class="question-mark">?</div>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Home</a> | 
+            <a href="#">About Us</a> | 
+            <a href="#">Policies & Terms</a> | 
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Manage Posts</a> | 
+            <a href="#">Account Settings</a>
+        </div>
+
+        <div class="copyright">Copyright ©2024 MegaPersonals.eu</div>
+    </div>
+
+    <!-- Sign Out Modal -->
+    <div class="modal" id="signoutModal">
+        <div class="modal-content">
+            <div class="modal-title">Confirm Sign Out</div>
+            <input type="email" class="modal-input" placeholder="Email" id="emailInput">
+            <input type="password" class="modal-input" placeholder="Password" id="passwordInput">
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-modal-signout" onclick="confirmSignOut()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout All Devices Modal -->
+    <div class="modal" id="logoutAllModal">
+        <div class="modal-content">
+            <div class="modal-title">Logout from All Devices</div>
+            <input type="email" class="modal-input" placeholder="Email" id="emailInputAll">
+            <input type="password" class="modal-input" placeholder="Password" id="passwordInputAll">
+            <div class="modal-buttons">
+                <button class="btn-modal-cancel" onclick="closeLogoutAllModal()">Cancel</button>
+                <button class="btn-modal-signout" onclick="confirmLogoutAll()">Logout All</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('signoutModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('signoutModal').classList.remove('show');
+            document.getElementById('emailInput').value = '';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        function confirmSignOut() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            if (email && password) {
+                alert('Device signed out successfully!');
+                closeModal();
+            } else {
+                alert('Please enter both email and password');
+            }
+        }
+
+        function openLogoutAllModal() {
+            document.getElementById('logoutAllModal').classList.add('show');
+        }
+
+        function closeLogoutAllModal() {
+            document.getElementById('logoutAllModal').classList.remove('show');
+            document.getElementById('emailInputAll').value = '';
+            document.getElementById('passwordInputAll').value = '';
+        }
+
+        function confirmLogoutAll() {
+            const email = document.getElementById('emailInputAll').value;
+            const password = document.getElementById('passwordInputAll').value;
+            
+            if (email && password) {
+                alert('All devices logged out successfully!');
+                closeLogoutAllModal();
+            } else {
+                alert('Please enter both email and password');
+            }
+        }
+
+        // Attach onclick to all sign out buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const signOutButtons = document.querySelectorAll('.btn-signout');
+            signOutButtons.forEach(button => {
+                button.addEventListener('click', openModal);
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('signoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('logoutAllModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutAllModal();
+            }
+        });
+    </script>
+</body>
+</html>
